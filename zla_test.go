@@ -10,7 +10,9 @@ import (
 	"runtime"
 	"strings"
 	"testing"
+	"time"
 
+	"github.com/cdleo/go-e2h"
 	stdLogger "github.com/cdleo/go-facades/logger"
 	"github.com/cdleo/go-zla"
 	. "github.com/onsi/ginkgo"
@@ -63,6 +65,28 @@ func WriteLogsInAllLevels(loggerInstance stdLogger.Logger) {
 	loggerInstance.Trace(messages[stdLogger.LogLevel_Trace])
 }
 
+func WriteFormattedLogsInAllLevels(loggerInstance stdLogger.Logger) {
+
+	loggerInstance.Showf("%s", messages[stdLogger.LogLevel_Show])
+	loggerInstance.Fatalf(nil, "%s", messages[stdLogger.LogLevel_Fatal])
+	loggerInstance.Errorf(nil, "%s", messages[stdLogger.LogLevel_Error])
+	loggerInstance.Warnf("%s", messages[stdLogger.LogLevel_Warning])
+	loggerInstance.Infof("%s", messages[stdLogger.LogLevel_Info])
+	loggerInstance.Busf("%s", messages[stdLogger.LogLevel_Business])
+	loggerInstance.Msgf("%s", messages[stdLogger.LogLevel_Message])
+	loggerInstance.Dbgf("%s", messages[stdLogger.LogLevel_Debug])
+	loggerInstance.Qryf("%s", messages[stdLogger.LogLevel_Query])
+	loggerInstance.Tracef("%s", messages[stdLogger.LogLevel_Trace])
+}
+
+func WriteErrorDetailsInAllLevels(loggerInstance stdLogger.Logger) {
+
+	err := e2h.Trace(fmt.Errorf("This is an error"))
+
+	loggerInstance.Fatalf(err, "%s", messages[stdLogger.LogLevel_Fatal])
+	loggerInstance.Errorf(err, "%s", messages[stdLogger.LogLevel_Error])
+}
+
 func CheckResult(result logResult, expected int) {
 	Expect(len(result)).To(Equal(expected))
 	for i, v := range result {
@@ -79,6 +103,7 @@ var _ = Describe("Testing: LOGGER", func() {
 
 	loggerInstance, _ = zla.NewLogger()
 	loggerInstance.SetOutput(&buf)
+	loggerInstance.SetTimestampFunc(time.Now)
 
 	Describe("The logger only log messages lower or equal to selected level", func() {
 
@@ -90,6 +115,13 @@ var _ = Describe("Testing: LOGGER", func() {
 			if CurrentGinkgoTestDescription().Failed {
 				PrintResult(result)
 			}
+		})
+
+		Context("When the Logger Level is invalid", func() {
+			It("Return error", func() {
+				err := loggerInstance.SetLogLevel("unknown")
+				Expect(err).ShouldNot(BeNil())
+			})
 		})
 
 		Context("When the Logger Level is disabled", func() {
@@ -217,10 +249,42 @@ var _ = Describe("Testing: LOGGER", func() {
 				_ = loggerInstance.SetLogLevel("trace")
 				buf.Reset()
 
-				WriteLogsInAllLevels(loggerInstance)
+				WriteFormattedLogsInAllLevels(loggerInstance)
 
 				ParseResult(buf.String(), &result)
 				CheckResult(result, 10)
+			})
+		})
+
+		Context("When and e2h error is logged", func() {
+			It("Dails are wrote on the log all level messages", func() {
+				_ = loggerInstance.SetLogLevel("info")
+				buf.Reset()
+
+				WriteErrorDetailsInAllLevels(loggerInstance)
+
+				ParseResult(buf.String(), &result)
+
+				Expect(len(result)).To(Equal(2))
+				for _, v := range result {
+					Expect(v["details"]).ToNot(BeNil())
+				}
+			})
+		})
+
+		Context("When the RefId it's set", func() {
+			It("Wrote the refId", func() {
+				_ = loggerInstance.SetLogLevel("info")
+				buf.Reset()
+
+				loggerInstance.WithRefID("TheRefID").Info("The log message")
+
+				ParseResult(buf.String(), &result)
+
+				Expect(len(result)).To(Equal(1))
+				for _, v := range result {
+					Expect(v["ref"]).To(BeEquivalentTo("TheRefID"))
+				}
 			})
 		})
 	})
