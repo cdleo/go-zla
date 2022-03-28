@@ -1,6 +1,6 @@
-# GO-E2H
+# GO-ZLA
 
-[![Go Reference](http://img.shields.io/badge/godoc-reference-blue.svg?style=flat)](https://pkg.go.dev/github.com/cdleo/go-e2h) [![license](http://img.shields.io/badge/license-MIT-red.svg?style=flat)](https://raw.githubusercontent.com/cdleo/go-e2h/master/LICENSE) [![Build Status](https://scrutinizer-ci.com/g/cdleo/go-e2h/badges/build.png?b=master)](https://scrutinizer-ci.com/g/cdleo/go-e2h/build-status/master) [![Code Coverage](https://scrutinizer-ci.com/g/cdleo/go-e2h/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/cdleo/go-e2h/?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/cdleo/go-e2h/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/cdleo/go-e2h/?branch=master)
+[![Go Reference](http://img.shields.io/badge/godoc-reference-blue.svg?style=flat)](https://pkg.go.dev/github.com/cdleo/go-zla) [![license](http://img.shields.io/badge/license-MIT-red.svg?style=flat)](https://raw.githubusercontent.com/cdleo/go-zla/master/LICENSE) [![Build Status](https://scrutinizer-ci.com/g/cdleo/go-zla/badges/build.png?b=master)](https://scrutinizer-ci.com/g/cdleo/go-zla/build-status/master) [![Code Coverage](https://scrutinizer-ci.com/g/cdleo/go-zla/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/cdleo/go-zla/?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/cdleo/go-zla/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/cdleo/go-zla/?branch=master)
 
 GO ZeroLog Adapter (a.k.a. go-zla) is a lightweight Golang module to add a better stack trace and context information on error events.
 As it's name says, this implementation uses zerolog (https://github.com/rs/zerolog) as writer.
@@ -67,7 +67,7 @@ This is the list of log levels and their meanings:
 - **trace**: Maximum level of detail, such as the values returned by the querys, http trace, etc.
 
 **Usage**
-This example program shows the initialization and the use of different levels:
+This example program shows the initialization and the use of some levels and features:
 ```go
 package zla_test
 
@@ -105,7 +105,7 @@ func Example_logger() {
 
 ## Sample
 
-You can find a sample of the use of go-e2h project [HERE](https://github.com/cdleo/go-zla/blob/master/zla_example_test.go)
+You can find a sample of the use of go-zla project [HERE](https://github.com/cdleo/go-zla/blob/master/zla_example_test.go)
 
 ## Contributing
 
