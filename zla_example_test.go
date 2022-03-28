@@ -18,7 +18,7 @@ func Example_logger() {
 
 	//We've set this time func in order to always get the same time in the logger output
 	mockedDateTime := time.Date(2021, 05, 21, 9, 00, 00, 000000000, time.UTC)
-	logger.SetTimestampFunc(mockedDateTime.Local)
+	logger.SetTimestampFunc(mockedDateTime.UTC)
 
 	//By default, the logger in fully initialized with level Info and writes to StdOutput
 	logger.Info("Log this!")
@@ -41,5 +41,4 @@ func Example_logger() {
 	// Output:
 	// {"time":"2021-05-21T06:00:00-03:00","level":"INFO","message":"Log this!","where":"zla_example_test.go:24"}
 	// {"time":"2021-05-21T06:00:00-03:00","ref":"ad7ec2d7-d92d-4d02-a937-e0c477611ffd","level":"ERROR","message":"This is an error log!","where":"zla_example_test.go:27","details":{"error":"foo","stack_trace":[{"func":"github.com/cdleo/go-zla_test.bar","caller":"zla_example_test.go:12"}]}}
-
 }
