@@ -3,31 +3,34 @@
 [![Go Reference](http://img.shields.io/badge/godoc-reference-blue.svg?style=flat)](https://pkg.go.dev/github.com/cdleo/go-e2h) [![license](http://img.shields.io/badge/license-MIT-red.svg?style=flat)](https://raw.githubusercontent.com/cdleo/go-e2h/master/LICENSE) [![Build Status](https://scrutinizer-ci.com/g/cdleo/go-e2h/badges/build.png?b=master)](https://scrutinizer-ci.com/g/cdleo/go-e2h/build-status/master) [![Code Coverage](https://scrutinizer-ci.com/g/cdleo/go-e2h/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/cdleo/go-e2h/?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/cdleo/go-e2h/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/cdleo/go-e2h/?branch=master)
 
 GO ZeroLog Adapter (a.k.a. go-zla) is a lightweight Golang module to add a better stack trace and context information on error events.
+As it's name says, this implementation uses zerolog (https://github.com/rs/zerolog) as writer.
 
 ## General
 
-We created this abstraction keeping in mind the current VT-NET log, trying to use same levels and meanings.
-That interface resides on gitlab.veritran.net/core/go-vt-platform/lib/core/interfaces/logger:
+The logger contract resides on the go-commons repository: [github.com/cdleo/go-commons/logger/logger.go](https://github.com/cdleo/go-commons/logger/logger.go):
 ```go
 type Logger interface {
-	Initialize(config LogConfig) errors.StackedError
-	SetLogLevel(logLevel string) errors.StackedError
-	Ctx(ctx context.Context) Logger
+	//Sets the current log level. (e.g. "debug")
+	SetLogLevel(level string) error
+	//Sets the log writer. (e.g. os.Stdout)
+	SetOutput(w io.Writer)
+	//Sets the function to write the log's timestamp. (e.g. time.Now)
+	SetTimestampFunc(f func() time.Time)
 
-	SetLogOutput(w io.Writer)
-	SetTimeFunction(f func() time.Time)
+	//Includes the ref field on the related log msg call
+	WithRefID(refID string) Logger
 
 	Show(msg string)
 	Showf(msg string, v ...interface{})
 
-	Fatal(err errors.StackedError, msg string)
-	Fatalf(err errors.StackedError, msg string, v ...interface{})
+	Fatal(err error, msg string)
+	Fatalf(err error, msg string, v ...interface{})
 
-	Error(err errors.StackedError, msg string)
-	Errorf(err errors.StackedError, msg string, v ...interface{})
+	Error(err error, msg string)
+	Errorf(err error, msg string, v ...interface{})
 
-	Warn(err errors.StackedError, msg string)
-	Warnf(err errors.StackedError, msg string, v ...interface{})
+	Warn(msg string)
+	Warnf(msg string, v ...interface{})
 
 	Info(msg string)
 	Infof(msg string, v ...interface{})
@@ -63,58 +66,40 @@ This is the list of log levels and their meanings:
 - **query**: Detail of executed querys with their input parameters
 - **trace**: Maximum level of detail, such as the values returned by the querys, http trace, etc.
 
-Current abstraction's implementation, uses zerolog (https://github.com/rs/zerolog) as writer and go-file-rotatelogs (https://github.com/lestrrat/go-file-rotatelogs) for log rotation and older files cleanup.
-
 **Usage**
 This example program shows the initialization and the use of different levels:
 ```go
-package logger_test
+package zla_test
 
 import (
-	"context"
 	"fmt"
 	"time"
 
-	loggerImple "gitlab.veritran.net/core/go-vt-platform/lib/core/implementations/logger"
-	"gitlab.veritran.net/core/go-vt-platform/lib/core/implementations/clock"
-	"gitlab.veritran.net/core/go-vt-platform/lib/core/interfaces/errors"
-	"gitlab.veritran.net/core/go-vt-platform/lib/core/interfaces/logger"
+	"github.com/cdleo/go-e2h"
+	"github.com/cdleo/go-zla"
 )
 
-func bar() errors.StackedError {
-	return errors.WrapA(fmt.Errorf("foo"))
+func bar() error {
+	return e2h.Trace(fmt.Errorf("foo"))
 }
 
 func Example_logger() {
 
-	loggerInstance := loggerImple.NewLogger()
+	logger, _ := zla.NewLogger()
 
 	//We've set this time func in order to always get the same time in the logger output
-	stoppedTime := clock.NewStoppedClock(time.Date(2021, 05, 21, 9, 00, 00, 000000000, time.UTC))
-	loggerInstance.SetTimeFunction(stoppedTime.CurrentInstant)
+	mockedDateTime := time.Date(2021, 05, 21, 9, 00, 00, 000000000, time.UTC)
+	logger.SetTimestampFunc(mockedDateTime.Local)
 
 	//By default, the logger in fully initialized with level Info and writes to StdOutput
-	loggerInstance.Info("Log this!")
+	logger.Info("Log this!")
 
-	ctx := context.WithValue(context.Background(), logger.RequestIdKey, "Example")
-	loggerInstance.Ctx(ctx).Error(bar(), "This is an error log!")
-
-	logConfig := loggerImple.NewLogConfig()
-	logConfig.LogLevel = "debug"
-	logConfig.Rotation.Path = "./log"
-	logConfig.Rotation.NamePattern = "%Y%m%d.log"
-	logConfig.Rotation.RotationTimeInHours = 24
-	logConfig.Rotation.MaxAgeInDays = 30
-
-	//Anyway, you can re-initialize the logger adding file rotation config
-	err := loggerInstance.Initialize(logConfig)
-	if err != nil {
-		loggerInstance.Error(err, "Unable to initialize logger")
-	}
+	reqId := "ad7ec2d7-d92d-4d02-a937-e0c477611ffd"
+	logger.WithRefID(reqId).Error(bar(), "This is an error log!")
 
 	// Output:
-	// {"time":"2021-05-21T09:00:00Z","level":"INFO","message":"Log this!","where":"gitlab.veritran.net/core/go-vt-platform/lib/core_test/implementations/logger/example_test.go:27"}
-	// {"time":"2021-05-21T09:00:00Z","ctx":"Example","level":"ERROR","message":"This is an error log!","where":"gitlab.veritran.net/core/go-vt-platform/lib/core_test/implementations/logger/example_test.go:30","details":{"error":"foo","stack_trace":[{"func":"gitlab.veritran.net/core/go-vt-platform/lib/core_test/implementations/logger_test.bar","caller":"gitlab.veritran.net/core/go-vt-platform/lib/core_test/implementations/logger/example_test.go:15"}]}}
+	// {"time":"2021-05-21T06:00:00-03:00","level":"INFO","message":"Log this!","where":"zla_example_test.go:24"}
+	// {"time":"2021-05-21T06:00:00-03:00","ref":"ad7ec2d7-d92d-4d02-a937-e0c477611ffd","level":"ERROR","message":"This is an error log!","where":"zla_example_test.go:27","details":{"error":"foo","stack_trace":[{"func":"github.com/cdleo/go-zla_test.bar","caller":"zla_example_test.go:12"}]}}
 }
 ```
 
