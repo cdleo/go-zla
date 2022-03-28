@@ -2,8 +2,6 @@ github.com/cdleo/go-commons v0.0.0-20220328183115-77de79dd0070 h1:bNk0fzPm3BUEiU
 github.com/cdleo/go-commons v0.0.0-20220328183115-77de79dd0070/go.mod h1:BQ8SpAF6lpwFND3DIC8i1/ZsQhcmk2YSrj76gTjgwjw=
 github.com/cdleo/go-e2h v1.1.2 h1:72NCUapoir4sZnW0+zeBF96ldFPwbPtjE3pZyTfRLOY=
 github.com/cdleo/go-e2h v1.1.2/go.mod h1:xe581yc8h/d+ca11mMfxIpu/96aGqac8fzAzt/4cUXE=
-github.com/cdleo/go-facades v0.0.0-20220328183115-77de79dd0070 h1:2dXu8npLn/SPiL1dQs0+ZxgB7ofYJOl9FxNren1niMA=
-github.com/cdleo/go-facades v0.0.0-20220328183115-77de79dd0070/go.mod h1:1n6ci5y2IHb1nbDQ4DM/cYsN80AmuA8ECa8t8ToslII=
 github.com/chzyer/logex v1.1.10/go.mod h1:+Ywpsq7O8HXn0nuIou7OrIPyXbp3wmkHB+jjWRnGsAI=
 github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e/go.mod h1:nSuG5e5PlCu98SY8svDHJxuZscDgtXS6KTTbou5AhLI=
 github.com/chzyer/test v0.0.0-20180213035817-a1ea475d72b1/go.mod h1:Q3SI9o4m/ZMnBNeIyt5eFwwo7qiLfzFZmjNmxjkiQlU=
