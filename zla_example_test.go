@@ -39,6 +39,6 @@ func Example_logger() {
 	l.SetLogOutput(writer)*/
 
 	// Output:
-	// {"time":"2021-05-21T06:00:00-03:00","level":"INFO","message":"Log this!","where":"zla_example_test.go:24"}
-	// {"time":"2021-05-21T06:00:00-03:00","ref":"ad7ec2d7-d92d-4d02-a937-e0c477611ffd","level":"ERROR","message":"This is an error log!","where":"zla_example_test.go:27","details":{"error":"foo","stack_trace":[{"func":"github.com/cdleo/go-zla_test.bar","caller":"zla_example_test.go:12"}]}}
+	// {"time":"2021-05-21T09:00:00Z","level":"INFO","message":"Log this!","where":"zla_example_test.go:24"}
+	// {"time":"2021-05-21T09:00:00Z","ref":"ad7ec2d7-d92d-4d02-a937-e0c477611ffd","level":"ERROR","message":"This is an error log!","where":"zla_example_test.go:27","details":{"error":"foo","stack_trace":[{"func":"github.com/cdleo/go-zla_test.bar","caller":"zla_example_test.go:12"}]}}
 }

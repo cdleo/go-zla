@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/cdleo/go-commons/logger"
+	"github.com/cdleo/go-e2h"
 	"github.com/cdleo/go-zla"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -64,26 +65,26 @@ func WriteLogsInAllLevels(loggerInstance logger.Logger) {
 	loggerInstance.Trace(messages[logger.LogLevel_Trace])
 }
 
-func WriteFormattedLogsInAllLevels(loggerInstance stdLogger.Logger) {
+func WriteFormattedLogsInAllLevels(loggerInstance logger.Logger) {
 
-	loggerInstance.Showf("%s", messages[stdLogger.LogLevel_Show])
-	loggerInstance.Fatalf(nil, "%s", messages[stdLogger.LogLevel_Fatal])
-	loggerInstance.Errorf(nil, "%s", messages[stdLogger.LogLevel_Error])
-	loggerInstance.Warnf("%s", messages[stdLogger.LogLevel_Warning])
-	loggerInstance.Infof("%s", messages[stdLogger.LogLevel_Info])
-	loggerInstance.Busf("%s", messages[stdLogger.LogLevel_Business])
-	loggerInstance.Msgf("%s", messages[stdLogger.LogLevel_Message])
-	loggerInstance.Dbgf("%s", messages[stdLogger.LogLevel_Debug])
-	loggerInstance.Qryf("%s", messages[stdLogger.LogLevel_Query])
-	loggerInstance.Tracef("%s", messages[stdLogger.LogLevel_Trace])
+	loggerInstance.Showf("%s", messages[logger.LogLevel_Show])
+	loggerInstance.Fatalf(nil, "%s", messages[logger.LogLevel_Fatal])
+	loggerInstance.Errorf(nil, "%s", messages[logger.LogLevel_Error])
+	loggerInstance.Warnf("%s", messages[logger.LogLevel_Warning])
+	loggerInstance.Infof("%s", messages[logger.LogLevel_Info])
+	loggerInstance.Busf("%s", messages[logger.LogLevel_Business])
+	loggerInstance.Msgf("%s", messages[logger.LogLevel_Message])
+	loggerInstance.Dbgf("%s", messages[logger.LogLevel_Debug])
+	loggerInstance.Qryf("%s", messages[logger.LogLevel_Query])
+	loggerInstance.Tracef("%s", messages[logger.LogLevel_Trace])
 }
 
-func WriteErrorDetailsInAllLevels(loggerInstance stdLogger.Logger) {
+func WriteErrorDetailsInAllLevels(loggerInstance logger.Logger) {
 
 	err := e2h.Trace(fmt.Errorf("This is an error"))
 
-	loggerInstance.Fatalf(err, "%s", messages[stdLogger.LogLevel_Fatal])
-	loggerInstance.Errorf(err, "%s", messages[stdLogger.LogLevel_Error])
+	loggerInstance.Fatalf(err, "%s", messages[logger.LogLevel_Fatal])
+	loggerInstance.Errorf(err, "%s", messages[logger.LogLevel_Error])
 }
 
 func CheckResult(result logResult, expected int) {
