@@ -7,7 +7,7 @@ As it's name says, this implementation uses zerolog (https://github.com/rs/zerol
 
 ## General
 
-The logger contract resides on the go-commons repository: [github.com/cdleo/go-commons/logger/logger.go](https://github.com/cdleo/go-commons/logger/logger.go):
+The logger contract resides on the go-commons repository: [github.com/cdleo/go-commons/logger/logger.go](https://github.com/cdleo/go-commons/blob/master/logger/logger.go):
 ```go
 type Logger interface {
 	//Sets the current log level. (e.g. "debug")
