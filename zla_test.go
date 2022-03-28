@@ -11,7 +11,7 @@ import (
 	"strings"
 	"testing"
 
-	stdLogger "github.com/cdleo/go-facades/logger"
+	"github.com/cdleo/go-commons/logger"
 	"github.com/cdleo/go-zla"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -49,18 +49,18 @@ func PrintResult(result logResult) {
 	}
 }
 
-func WriteLogsInAllLevels(loggerInstance stdLogger.Logger) {
+func WriteLogsInAllLevels(loggerInstance logger.Logger) {
 
-	loggerInstance.Show(messages[stdLogger.LogLevel_Show])
-	loggerInstance.Fatal(nil, messages[stdLogger.LogLevel_Fatal])
-	loggerInstance.Error(nil, messages[stdLogger.LogLevel_Error])
-	loggerInstance.Warn(messages[stdLogger.LogLevel_Warning])
-	loggerInstance.Info(messages[stdLogger.LogLevel_Info])
-	loggerInstance.Bus(messages[stdLogger.LogLevel_Business])
-	loggerInstance.Msg(messages[stdLogger.LogLevel_Message])
-	loggerInstance.Dbg(messages[stdLogger.LogLevel_Debug])
-	loggerInstance.Qry(messages[stdLogger.LogLevel_Query])
-	loggerInstance.Trace(messages[stdLogger.LogLevel_Trace])
+	loggerInstance.Show(messages[logger.LogLevel_Show])
+	loggerInstance.Fatal(nil, messages[logger.LogLevel_Fatal])
+	loggerInstance.Error(nil, messages[logger.LogLevel_Error])
+	loggerInstance.Warn(messages[logger.LogLevel_Warning])
+	loggerInstance.Info(messages[logger.LogLevel_Info])
+	loggerInstance.Bus(messages[logger.LogLevel_Business])
+	loggerInstance.Msg(messages[logger.LogLevel_Message])
+	loggerInstance.Dbg(messages[logger.LogLevel_Debug])
+	loggerInstance.Qry(messages[logger.LogLevel_Query])
+	loggerInstance.Trace(messages[logger.LogLevel_Trace])
 }
 
 func CheckResult(result logResult, expected int) {
@@ -72,7 +72,7 @@ func CheckResult(result logResult, expected int) {
 
 var _ = Describe("Testing: LOGGER", func() {
 	var (
-		loggerInstance stdLogger.Logger
+		loggerInstance logger.Logger
 		result         logResult
 		buf            bytes.Buffer
 	)

@@ -3,8 +3,8 @@ module github.com/cdleo/go-zla
 go 1.17
 
 require (
-	github.com/cdleo/go-e2h v1.1.1
-	github.com/cdleo/go-facades v0.0.0-20220216180758-7a00b32115ac
+	github.com/cdleo/go-commons v0.0.0-20220328183115-77de79dd0070
+	github.com/cdleo/go-e2h v1.1.2
 	github.com/onsi/ginkgo v1.16.5
 	github.com/onsi/gomega v1.18.1
 	github.com/rs/zerolog v1.26.1
